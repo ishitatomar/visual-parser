@@ -29,20 +29,6 @@ This project helps in understanding compiler design concepts by providing a visu
 
 ---
 
-## 📌 Example
-
-**Input:**
-```
-a + b * c
-```
-
-**Output:**
-- Tokens generated  
-- Parse tree displayed  
-- No syntax errors  
-
----
-
 ## 👥 Team
 
 - Ishita Tomar  
@@ -52,6 +38,3 @@ a + b * c
 
 ---
 
-## ⭐ Overview
-
-This project converts complex compiler concepts into a simple and visual learning experience.
