@@ -1,9 +1,9 @@
 class LR1Item:
     def __init__(self, lhs, rhs, dot_pos, lookaheads):
         self.lhs = lhs
-        self.rhs = tuple(rhs)  # tuple for hashability
+        self.rhs = tuple(rhs) 
         self.dot_pos = dot_pos
-        self.lookaheads = set(lookaheads) # set of terminals
+        self.lookaheads = set(lookaheads) 
 
     def __eq__(self, other):
         return (self.lhs == other.lhs and 
@@ -41,16 +41,15 @@ def closure(items, grammar, first_sets):
     while added:
         added = False
         for item in closure_set:
-            # item is A -> alpha • B beta, a
             if item.rhs != ('epsilon',) and item.dot_pos < len(item.rhs):
                 B = item.rhs[item.dot_pos]
                 if B in grammar.non_terminals:
-                    # beta is the rest of the rhs after B
+                
                     beta = item.rhs[item.dot_pos + 1:]
                     
-                    # For each b in FIRST(beta a)
+                    
                     for a in list(item.lookaheads):
-                        # Calculate FIRST(beta a)
+                        
                         first_beta_a = set()
                         all_derive_eps = True
                         for sym in beta:
@@ -65,17 +64,15 @@ def closure(items, grammar, first_sets):
                         if all_derive_eps:
                             first_beta_a.add(a)
                             
-                        # For each production B -> gamma
+                        
                         for gamma in grammar.productions.get(B, []):
                             gamma_tuple = tuple(gamma) if gamma != ['epsilon'] else ('epsilon',)
                             new_item = LR1Item(B, gamma_tuple, 0, first_beta_a)
                             
-                            # Check if new_item is in closure_set (need to merge lookaheads if core exists)
                             found = False
                             for existing in closure_set:
                                 if existing.core_eq(new_item):
                                     found = True
-                                    # If lookaheads aren't fully contained
                                     if not new_item.lookaheads.issubset(existing.lookaheads):
                                         existing.lookaheads.update(new_item.lookaheads)
                                         added = True
@@ -107,10 +104,10 @@ def canonical_collection(grammar, first_sets):
     start_item = LR1Item(grammar.start_symbol, grammar.productions[grammar.start_symbol][0], 0, {'$'})
     start_set = closure([start_item], grammar, first_sets)
     
-    # List of states (each state is a list of LR1Item)
+    
     C = [start_set]
     
-    # Store transitions: transitions[state_idx][symbol] = next_state_idx
+    
     transitions = {0: {}}
     
     added = True
@@ -127,10 +124,10 @@ def canonical_collection(grammar, first_sets):
                 next_state = goto(state, sym, grammar, first_sets)
                 
                 if next_state:
-                    # Check if next_state already exists in C
+                   
                     found_idx = -1
                     for j, existing_state in enumerate(C):
-                        # Proper comparison of sets of items
+                        
                         if len(next_state) == len(existing_state):
                             all_match = True
                             for item1 in next_state:
