@@ -34,8 +34,6 @@ def parse_endpoint():
         if lexer_errors:
             response['error'] = f"Lexical error: unrecognized character {lexer_errors[0]['lexeme']}"
             return jsonify(response)
-
-        # 2. Grammar Parsing
         g = Grammar()
         g.parse_from_string(grammar_str)
         if not g.start_symbol:
@@ -43,13 +41,9 @@ def parse_endpoint():
             return jsonify(response)
             
         response['grammar'] = g.to_dict()
-
-        # 3. FIRST and FOLLOW
         first_sets = compute_first(g)
         follow_sets = compute_follow(g, first_sets)
         response['sets'] = first_follow_to_dict(first_sets, follow_sets)
-
-        # 4. LL(1) Parsing
         ll1 = LL1Parser(g, first_sets, follow_sets)
         ll1_table, ll1_conflicts, ll1_conflict_details = ll1.build_table()
         
@@ -68,8 +62,6 @@ def parse_endpoint():
             response['ll1']['history'] = []
             response['ll1']['tree'] = {}
             response['ll1']['error'] = True
-
-        # 5. LALR Parsing
         aug_g = g.get_augmented_grammar()
         aug_first_sets = compute_first(aug_g)
         lr1_states, lr1_transitions = canonical_collection(aug_g, aug_first_sets)
@@ -87,7 +79,6 @@ def parse_endpoint():
         response['lalr_states'] = []
         for i, state in enumerate(lalr_states):
             state_items = [str(item) for item in state]
-            # Find which lr1 states were merged
             merged_from = [old_id for old_id, new_id in mapping.items() if new_id == i]
             response['lalr_states'].append({
                 'id': i,
