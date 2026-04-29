@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 import os
 import sys
-# Add the current directory to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from lexer import tokenize
