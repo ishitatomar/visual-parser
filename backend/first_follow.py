@@ -11,7 +11,6 @@ def compute_first(grammar):
             for rhs in grammar.productions[lhs]:
                 for symbol in rhs:
                     before_add = len(first[lhs])
-                    # Add everything from the FIRST set of symbol, excluding epsilon
                     for s in first.get(symbol, set()):
                         if s != 'epsilon':
                             first[lhs].add(s)
@@ -22,7 +21,6 @@ def compute_first(grammar):
                     if 'epsilon' not in first.get(symbol, set()):
                         break
                 else:
-                    # If all symbols in rhs can derive epsilon
                     if 'epsilon' not in first[lhs]:
                         first[lhs].add('epsilon')
                         changed = True
@@ -31,9 +29,7 @@ def compute_first(grammar):
 
 def compute_follow(grammar, first_sets):
     follow = {nt: set() for nt in grammar.non_terminals}
-    
-    # Rule 1: Place $ in FOLLOW(Start_Symbol)
-    follow[grammar.start_symbol].add('$')
+        follow[grammar.start_symbol].add('$')
     
     changed = True
     while changed:
@@ -45,7 +41,6 @@ def compute_follow(grammar, first_sets):
                     if symbol in grammar.non_terminals:
                         before_add = len(follow[symbol])
                         
-                        # Calculate FIRST of string following symbol
                         next_first = set()
                         all_derive_epsilon = True
                         for j in range(i + 1, len(rhs)):
@@ -63,7 +58,6 @@ def compute_follow(grammar, first_sets):
                                 follow[symbol].add(f)
                                 changed = True
                                 
-                        # Rule 3: If symbol is at end of production or everything following derives epsilon
                         if all_derive_epsilon or i == len(rhs) - 1:
                             for f in follow[lhs]:
                                 if f not in follow[symbol]:
@@ -74,7 +68,6 @@ def compute_follow(grammar, first_sets):
 
 def first_follow_to_dict(first, follow):
     first_dict = {k: list(v) for k, v in first.items() if k != 'epsilon' and k not in first[k]}
-    # Clean up first_dict terminal to terminal mapping if returned
     cleaned_first = {k: list(v) for k, v in first.items() if k in follow} 
     follow_dict = {k: list(v) for k, v in follow.items()}
     return {
