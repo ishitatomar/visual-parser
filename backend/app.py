@@ -28,7 +28,6 @@ def parse_endpoint():
     response = {}
 
     try:
-        # 1. Lexical Analysis
         tokens = tokenize(input_str)
         response['tokens'] = tokens
         
