@@ -30,8 +30,6 @@ def parse_endpoint():
     try:
         tokens = tokenize(input_str)
         response['tokens'] = tokens
-        
-        # Check for lexer errors
         lexer_errors = [t for t in tokens if t['token'] == 'ERROR']
         if lexer_errors:
             response['error'] = f"Lexical error: unrecognized character {lexer_errors[0]['lexeme']}"
