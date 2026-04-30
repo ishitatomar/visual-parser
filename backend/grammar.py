@@ -3,7 +3,7 @@ class Grammar:
         self.terminals = set()
         self.non_terminals = set()
         self.start_symbol = None
-        self.productions = {}  # dict mapping LHS (str) to list of arrays representing RHS
+        self.productions = {}  
 
     def parse_from_string(self, grammar_str):
         self.terminals = set()
@@ -14,7 +14,7 @@ class Grammar:
         lines = [line.strip() for line in grammar_str.split('\n') if line.strip()]
         
         for idx, line in enumerate(lines):
-            # Support multiple derivation symbols
+            
             if '->' in line:
                 lhs, rhs_part = line.split('->', 1)
             elif '→' in line:
@@ -36,16 +36,16 @@ class Grammar:
             import re
             rhs_alternatives = rhs_part.split('|')
             for alt in rhs_alternatives:
-                # Add spaces around non-alphanumeric chars (excluding apostrophes)
+               
                 alt_spaced = re.sub(r"([^\w\s\'])", r" \1 ", alt)
                 symbols = alt_spaced.strip().split()
-                # Empty production handling
+               
                 if not symbols or symbols[0] in ['epsilon', 'ε', "''", '""', 'e']:
                     self.productions[lhs].append(['epsilon'])
                 else:
                     self.productions[lhs].append(symbols)
 
-        # Identify terminals
+        
         for lhs, rhs_list in self.productions.items():
             for rhs in rhs_list:
                 for symbol in rhs:
