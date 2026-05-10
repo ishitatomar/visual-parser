@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => //only after html is loaded: no access before elements exist
+document.addEventListener('DOMContentLoaded', () => //only after html is loaded: no accerss before elements exist
 {
     // ui 
     const tabBtns = document.querySelectorAll('.tab-btn');
@@ -36,13 +36,13 @@ document.addEventListener('DOMContentLoaded', () => //only after html is loaded:
         btnParse.disabled = true;
 
         try {//api calling
-            const response = await fetch('http://127.0.0.1:5000/api/parse', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ grammar: grammarStr, input: inputStr })
-});
+            const response = await fetch('/api/parse', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ grammar: grammarStr, input: inputStr })
+            });
 
             const data = await response.json();
 

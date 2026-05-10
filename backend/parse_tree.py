@@ -1,7 +1,11 @@
 def build_hierarchical_tree(nodes_list):
     """
     Converts a flat list of nodes 
+<<<<<<< HEAD
     [{"id": 0, "label": "E", "children": [1, 2]}, ...]python3 --version
+=======
+    [{"id": 0, "label": "E", "children": [1, 2]}, ...]
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
     into a nested JSON structure for D3.js.
     """
     if not nodes_list:

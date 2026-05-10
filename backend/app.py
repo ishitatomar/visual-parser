@@ -1,8 +1,13 @@
 from flask import Flask, request, jsonify, render_template
+<<<<<<< HEAD
 from flask_cors import CORS
 import os
 import sys
 # Add the current directory to path
+=======
+import os
+import sys
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from lexer import tokenize
@@ -16,7 +21,10 @@ from shift_reduce_parser import ShiftReduceParser
 from parse_tree import build_hierarchical_tree
 
 app = Flask(__name__, static_folder='../frontend', static_url_path='/')
+<<<<<<< HEAD
 CORS(app)
+=======
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
 
 @app.route('/')
 def index():
@@ -31,17 +39,25 @@ def parse_endpoint():
     response = {}
 
     try:
+<<<<<<< HEAD
         # 1. Lexical Analysis
         tokens = tokenize(input_str)
         response['tokens'] = tokens
         
         # Check for lexer errors
+=======
+        tokens = tokenize(input_str)
+        response['tokens'] = tokens
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
         lexer_errors = [t for t in tokens if t['token'] == 'ERROR']
         if lexer_errors:
             response['error'] = f"Lexical error: unrecognized character {lexer_errors[0]['lexeme']}"
             return jsonify(response)
+<<<<<<< HEAD
 
         # 2. Grammar Parsing
+=======
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
         g = Grammar()
         g.parse_from_string(grammar_str)
         if not g.start_symbol:
@@ -49,6 +65,7 @@ def parse_endpoint():
             return jsonify(response)
             
         response['grammar'] = g.to_dict()
+<<<<<<< HEAD
 
         # 3. FIRST and FOLLOW
         first_sets = compute_first(g)
@@ -56,6 +73,11 @@ def parse_endpoint():
         response['sets'] = first_follow_to_dict(first_sets, follow_sets)
 
         # 4. LL(1) Parsing
+=======
+        first_sets = compute_first(g)
+        follow_sets = compute_follow(g, first_sets)
+        response['sets'] = first_follow_to_dict(first_sets, follow_sets)
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
         ll1 = LL1Parser(g, first_sets, follow_sets)
         ll1_table, ll1_conflicts, ll1_conflict_details = ll1.build_table()
         
@@ -74,8 +96,11 @@ def parse_endpoint():
             response['ll1']['history'] = []
             response['ll1']['tree'] = {}
             response['ll1']['error'] = True
+<<<<<<< HEAD
 
         # 5. LALR Parsing
+=======
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
         aug_g = g.get_augmented_grammar()
         aug_first_sets = compute_first(aug_g)
         lr1_states, lr1_transitions = canonical_collection(aug_g, aug_first_sets)
@@ -93,7 +118,10 @@ def parse_endpoint():
         response['lalr_states'] = []
         for i, state in enumerate(lalr_states):
             state_items = [str(item) for item in state]
+<<<<<<< HEAD
             # Find which lr1 states were merged
+=======
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
             merged_from = [old_id for old_id, new_id in mapping.items() if new_id == i]
             response['lalr_states'].append({
                 'id': i,

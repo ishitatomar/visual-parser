@@ -1,6 +1,9 @@
 import ply.lex as lex
+<<<<<<< HEAD
 
 # Reserved keywords
+=======
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
 reserved = {
     'if': 'IF',
     'else': 'ELSE',
@@ -11,7 +14,10 @@ reserved = {
     'void': 'VOID'
 }
 
+<<<<<<< HEAD
 # List of token names
+=======
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
 tokens = [
     'IDENTIFIER',
     'INTEGER',
@@ -34,8 +40,11 @@ tokens = [
     'LE',
     'GE',
 ] + list(reserved.values())
+<<<<<<< HEAD
 
 # Regular expression rules for simple tokens
+=======
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
 t_PLUS      = r'\+'
 t_MINUS     = r'-'
 t_TIMES     = r'\*'
@@ -87,7 +96,10 @@ def t_error(t):
     t.lexer.errors.append(result)
     t.lexer.skip(1)
 
+<<<<<<< HEAD
 # Build the lexer
+=======
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
 lexer = lex.lex()
 
 def tokenize(input_string):

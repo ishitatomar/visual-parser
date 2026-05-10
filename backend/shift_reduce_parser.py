@@ -25,7 +25,10 @@ class ShiftReduceParser:
         history = []
         pointer = 0
         
+<<<<<<< HEAD
         # For parse tree generation
+=======
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
         tree_nodes = []
         node_id_counter = 0
         node_stack = []
@@ -94,7 +97,11 @@ class ShiftReduceParser:
                 stack.append(goto_state)
                 
                 if rhs == ['epsilon']:
+<<<<<<< HEAD
                     # Create epsilon node if reduce by epsilon
+=======
+                    
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
                     tree_nodes.append({"id": node_id_counter, "label": "ε", "children": []})
                     children_ids.append(node_id_counter)
                     node_id_counter += 1
@@ -107,8 +114,12 @@ class ShiftReduceParser:
                 step["action"] = "Accept"
                 history.append(step)
                 
+<<<<<<< HEAD
                 # augmented start symbol reduction completes implicitly
                 # the root node is the last node added
+=======
+                
+>>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
                 break
                 
         return history, tree_nodes, False
