@@ -1,0 +1,130 @@
+Grammar:
+{
+  "start_symbol": "E",
+  "non_terminals": [
+    "E",
+    "T"
+  ],
+  "terminals": [
+    "+",
+    "id"
+  ],
+  "productions": {
+    "E": [
+      [
+        "E",
+        "+",
+        "T"
+      ],
+      [
+        "T"
+      ]
+    ],
+    "T": [
+      [
+        "id"
+      ]
+    ]
+  }
+}
+
+FIRST and FOLLOW:
+{
+  "first": {
+    "E": [
+      "id"
+    ],
+    "T": [
+      "id"
+    ]
+  },
+  "follow": {
+    "E": [
+      "$",
+      "+"
+    ],
+    "T": [
+      "$",
+      "+"
+    ]
+  }
+}
+
+LL(1) Table:
+{
+  "E": {
+    "id": [
+      "T"
+    ]
+  },
+  "T": {
+    "id": [
+      "id"
+    ]
+  }
+}
+
+LALR Conflicts: False
+
+LALR Action Table:
+{
+  "0": {
+    "id": "S1"
+  },
+  "1": {
+    "$": "R T -> id",
+    "+": "R T -> id"
+  },
+  "2": {
+    "$": "Accept",
+    "+": "S4"
+  },
+  "3": {
+    "$": "R E -> T",
+    "+": "R E -> T"
+  },
+  "4": {
+    "id": "S1"
+  },
+  "5": {
+    "$": "R E -> E + T",
+    "+": "R E -> E + T"
+  }
+}
+
+LALR Goto Table:
+{
+  "0": {
+    "E": 2,
+    "T": 3
+  },
+  "1": {},
+  "2": {},
+  "3": {},
+  "4": {
+    "T": 5
+  },
+  "5": {}
+}
+
+Tokens: [{'lexeme': 'id', 'token': 'IDENTIFIER', 'line': 1, 'position': 0}, {'lexeme': '+', 'token': 'PLUS', 'line': 1, 'position': 3}, {'lexeme': 'id', 'token': 'IDENTIFIER', 'line': 1, 'position': 5}]
+
+LL1 Parsing:
+History:
+{'stack': ['$', 'E'], 'input': ['id', '+', 'id', '$'], 'action': 'E -> T'}
+{'stack': ['$', 'T'], 'input': ['id', '+', 'id', '$'], 'action': 'T -> id'}
+{'stack': ['$', 'id'], 'input': ['id', '+', 'id', '$'], 'action': 'Match id'}
+{'stack': ['$'], 'input': ['+', 'id', '$'], 'action': 'Error: Expected $, found +'}
+Error: True
+
+LALR Parsing:
+History:
+{'stack': ['0'], 'input': ['id', '+', 'id', '$'], 'action': 'Shift 1'}
+{'stack': ['0', 'id', '1'], 'input': ['+', 'id', '$'], 'action': 'Reduce T -> id'}
+{'stack': ['0', 'T', '3'], 'input': ['+', 'id', '$'], 'action': 'Reduce E -> T'}
+{'stack': ['0', 'E', '2'], 'input': ['+', 'id', '$'], 'action': 'Shift 4'}
+{'stack': ['0', 'E', '2', '+', '4'], 'input': ['id', '$'], 'action': 'Shift 1'}
+{'stack': ['0', 'E', '2', '+', '4', 'id', '1'], 'input': ['$'], 'action': 'Reduce T -> id'}
+{'stack': ['0', 'E', '2', '+', '4', 'T', '5'], 'input': ['$'], 'action': 'Reduce E -> E + T'}
+{'stack': ['0', 'E', '2'], 'input': ['$'], 'action': 'Accept'}
+Error: False

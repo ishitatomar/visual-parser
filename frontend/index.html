@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Parse Tree Generator | Compiler Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-content">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h1>Parse<span class="highlight">Visualizer</span></h1>
+            </div>
+            <p class="subtitle">Interactive Compiler Design Educational Tool</p>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <!-- Input Section -->
+        <section class="panel input-panel">
+            <div class="panel-header">
+                <h2>1. Input Definition</h2>
+            </div>
+            <div class="panel-body">
+                <div class="input-group">
+                    <label for="grammar-input">Grammar Rules</label>
+                    <textarea id="grammar-input" rows="7" placeholder="E -> T E'&#10;E' -> + T E' | epsilon&#10;T -> F T'&#10;T' -> * F T' | epsilon&#10;F -> ( E ) | id">E -> T E'
+E' -> + T E' | epsilon
+T -> F T'
+T' -> * F T' | epsilon
+F -> ( E ) | id</textarea>
+                    <p class="help-text">Use <code>-></code> or <code>=</code> for rules. Use <code>epsilon</code> for empty productions.</p>
+                </div>
+                
+                <div class="input-group">
+                    <label for="string-input">Input String</label>
+                    <input type="text" id="string-input" value="id + id * id">
+                </div>
+
+                <div class="action-row">
+                    <button id="btn-parse" class="btn-primary">
+                        <span>Generate Visualization</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+                    <div id="loading-spinner" class="spinner hidden"></div>
+                </div>
+
+                <div id="global-error" class="alert alert-error hidden"></div>
+            </div>
+        </section>
+
+        <!-- Lexical Analysis -->
+        <section class="panel lexer-panel">
+            <div class="panel-header">
+                <h2>2. Lexical Analysis</h2>
+                <span class="badge" id="token-count">0 Tokens</span>
+            </div>
+            <div class="panel-body table-container">
+                <table id="token-table">
+                    <thead>
+                        <tr>
+                            <th>Lexeme</th>
+                            <th>Token ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Populated by JS -->
+                        <tr><td colspan="2" class="empty-state">Run generation to view tokens</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- FIRST & FOLLOW Sets -->
+        <section class="panel sets-panel">
+            <div class="panel-header">
+                <h2>3. FIRST & FOLLOW Sets</h2>
+            </div>
+            <div class="panel-body table-container">
+                <table id="sets-table">
+                    <thead>
+                        <tr>
+                            <th>Non-Terminal</th>
+                            <th>FIRST Set</th>
+                            <th>FOLLOW Set</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Populated by JS -->
+                        <tr><td colspan="3" class="empty-state">Run generation to view sets</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="tabs-container panel">
+            <div class="panel-header tabs-header">
+                <button class="tab-btn active" data-target="tab-ll1">LL(1) Parser</button>
+                <button class="tab-btn" data-target="tab-lr1">LR(1) Items</button>
+                <button class="tab-btn" data-target="tab-lalr">LALR Parser</button>
+            </div>
+            
+            <div class="tab-content active" id="tab-ll1">
+                <div class="split-view">
+                    <!-- LL(1) Table -->
+                    <div class="sub-panel">
+                        <h3>LL(1) Parsing Table</h3>
+                        <div id="ll1-error" class="alert alert-error hidden"></div>
+                        <div class="table-container wrapper-table-horiz">
+                            <table id="ll1-table">
+                                <thead>
+                                    <!-- Populated by JS -->
+                                </thead>
+                                <tbody>
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- LL(1) Simulation -->
+                    <div class="sub-panel">
+                        <h3>Predictive Parsing Steps</h3>
+                        <div class="table-container">
+                            <table id="ll1-sim-table">
+                                <thead>
+                                    <tr>
+                                        <th>Stack</th>
+                                        <th>Input</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sub-panel parse-tree-panel">
+                    <h3>LL(1) Parse Tree</h3>
+                    <div id="ll1-tree" class="d3-container"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-lr1">
+                <div class="sub-panel">
+                    <h3>Canonical LR(1) Collection</h3>
+                    <div class="grid-states" id="lr1-states-container">
+                        <!-- Populated by JS -->
+                        <div class="empty-state">Run generation to view LR(1) states</div>
+                    </div>
+                </div>
+                
+                <div class="sub-panel">
+                    <h3>LALR Merged States (Same LR(0) Cores)</h3>
+                    <div class="grid-states" id="lalr-states-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-lalr">
+                 <div class="split-view">
+                    <!-- LALR Table -->
+                    <div class="sub-panel">
+                        <h3>LALR Parsing Table (ACTION & GOTO)</h3>
+                        <div id="lalr-error" class="alert alert-error hidden"></div>
+                        <div class="table-container wrapper-table-horiz">
+                            <table id="lalr-table">
+                                <thead>
+                                    <!-- Populated by JS -->
+                                </thead>
+                                <tbody>
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- LALR Simulation -->
+                    <div class="sub-panel">
+                        <h3>Shift-Reduce Simulation</h3>
+                        <div class="table-container">
+                            <table id="lalr-sim-table">
+                                <thead>
+                                    <tr>
+                                        <th>Stack</th>
+                                        <th>Input</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sub-panel parse-tree-panel">
+                    <h3>LALR Parse Tree</h3>
+                    <div id="lalr-tree" class="d3-container"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="app-footer">
+        <p>Built with Python (PLY) & JavaScript (D3.js) - Visual Parse Tree Generator</p>
+    </footer>
+
+    <script src="tree_visualization.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
