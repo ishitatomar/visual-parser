@@ -1,13 +1,9 @@
 from flask import Flask, request, jsonify, render_template
-<<<<<<< HEAD
 from flask_cors import CORS
 import os
 import sys
+
 # Add the current directory to path
-=======
-import os
-import sys
->>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from lexer import tokenize
@@ -21,10 +17,7 @@ from shift_reduce_parser import ShiftReduceParser
 from parse_tree import build_hierarchical_tree
 
 app = Flask(__name__, static_folder='../frontend', static_url_path='/')
-<<<<<<< HEAD
 CORS(app)
-=======
->>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
 
 @app.route('/')
 def index():
@@ -39,33 +32,25 @@ def parse_endpoint():
     response = {}
 
     try:
-<<<<<<< HEAD
         # 1. Lexical Analysis
         tokens = tokenize(input_str)
         response['tokens'] = tokens
-        
+
         # Check for lexer errors
-=======
-        tokens = tokenize(input_str)
-        response['tokens'] = tokens
->>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
         lexer_errors = [t for t in tokens if t['token'] == 'ERROR']
         if lexer_errors:
             response['error'] = f"Lexical error: unrecognized character {lexer_errors[0]['lexeme']}"
             return jsonify(response)
-<<<<<<< HEAD
 
         # 2. Grammar Parsing
-=======
->>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
         g = Grammar()
         g.parse_from_string(grammar_str)
+
         if not g.start_symbol:
             response['error'] = "Invalid grammar format. Missing start symbol."
             return jsonify(response)
-            
+
         response['grammar'] = g.to_dict()
-<<<<<<< HEAD
 
         # 3. FIRST and FOLLOW
         first_sets = compute_first(g)
@@ -73,20 +58,15 @@ def parse_endpoint():
         response['sets'] = first_follow_to_dict(first_sets, follow_sets)
 
         # 4. LL(1) Parsing
-=======
-        first_sets = compute_first(g)
-        follow_sets = compute_follow(g, first_sets)
-        response['sets'] = first_follow_to_dict(first_sets, follow_sets)
->>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
         ll1 = LL1Parser(g, first_sets, follow_sets)
         ll1_table, ll1_conflicts, ll1_conflict_details = ll1.build_table()
-        
+
         response['ll1'] = {
             'table': ll1_table,
             'conflicts': ll1_conflicts,
             'conflict_details': ll1_conflict_details
         }
-        
+
         if not ll1_conflicts:
             ll1_history, ll1_nodes, ll1_error = ll1.parse(tokens)
             response['ll1']['history'] = ll1_history
@@ -96,51 +76,66 @@ def parse_endpoint():
             response['ll1']['history'] = []
             response['ll1']['tree'] = {}
             response['ll1']['error'] = True
-<<<<<<< HEAD
 
         # 5. LALR Parsing
-=======
->>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
         aug_g = g.get_augmented_grammar()
         aug_first_sets = compute_first(aug_g)
-        lr1_states, lr1_transitions = canonical_collection(aug_g, aug_first_sets)
-        
+
+        lr1_states, lr1_transitions = canonical_collection(
+            aug_g,
+            aug_first_sets
+        )
+
         response['lr1_collection'] = []
+
         for i, state in enumerate(lr1_states):
             state_items = [str(item) for item in state]
+
             response['lr1_collection'].append({
                 'id': i,
                 'items': state_items
             })
-            
-        lalr_states, lalr_transitions, mapping = compute_lalr_states(lr1_states, lr1_transitions)
-        
+
+        lalr_states, lalr_transitions, mapping = compute_lalr_states(
+            lr1_states,
+            lr1_transitions
+        )
+
         response['lalr_states'] = []
+
         for i, state in enumerate(lalr_states):
             state_items = [str(item) for item in state]
-<<<<<<< HEAD
-            # Find which lr1 states were merged
-=======
->>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
-            merged_from = [old_id for old_id, new_id in mapping.items() if new_id == i]
+
+            # Find which LR1 states were merged
+            merged_from = [
+                old_id for old_id, new_id in mapping.items()
+                if new_id == i
+            ]
+
             response['lalr_states'].append({
                 'id': i,
                 'items': state_items,
                 'merged_from': merged_from
             })
-            
-        lalr_action, lalr_goto, lalr_conflicts, lalr_conflict_details = build_lalr_table(aug_g, lalr_states, lalr_transitions)
-        
+
+        lalr_action, lalr_goto, lalr_conflicts, lalr_conflict_details = build_lalr_table(
+            aug_g,
+            lalr_states,
+            lalr_transitions
+        )
+
         response['lalr'] = {
             'action_table': lalr_action,
             'goto_table': lalr_goto,
             'conflicts': lalr_conflicts,
             'conflict_details': lalr_conflict_details
         }
-        
+
         if not lalr_conflicts:
             sr_parser = ShiftReduceParser(lalr_action, lalr_goto, g)
+
             sr_history, sr_nodes, sr_error = sr_parser.parse(tokens)
+
             response['lalr']['history'] = sr_history
             response['lalr']['tree'] = build_hierarchical_tree(sr_nodes)
             response['lalr']['error'] = sr_error
@@ -153,7 +148,7 @@ def parse_endpoint():
         import traceback
         traceback.print_exc()
         response['error'] = str(e)
-        
+
     return jsonify(response)
 
 if __name__ == '__main__':
