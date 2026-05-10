@@ -1,9 +1,6 @@
 import ply.lex as lex
-<<<<<<< HEAD
 
 # Reserved keywords
-=======
->>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
 reserved = {
     'if': 'IF',
     'else': 'ELSE',
@@ -14,10 +11,7 @@ reserved = {
     'void': 'VOID'
 }
 
-<<<<<<< HEAD
 # List of token names
-=======
->>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
 tokens = [
     'IDENTIFIER',
     'INTEGER',
@@ -40,11 +34,8 @@ tokens = [
     'LE',
     'GE',
 ] + list(reserved.values())
-<<<<<<< HEAD
 
 # Regular expression rules for simple tokens
-=======
->>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
 t_PLUS      = r'\+'
 t_MINUS     = r'-'
 t_TIMES     = r'\*'
@@ -58,10 +49,10 @@ t_COMMA     = r','
 t_SEMICOLON = r';'
 t_EQ        = r'=='
 t_NEQ       = r'!='
-t_LT        = r'<'
-t_GT        = r'>'
 t_LE        = r'<='
 t_GE        = r'>='
+t_LT        = r'<'
+t_GT        = r'>'
 
 def t_FLOAT_CONST(t):
     r'\d+\.\d+'
@@ -82,7 +73,8 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-t_ignore  = ' \t'
+# Ignore spaces and tabs
+t_ignore = ' \t'
 
 def t_error(t):
     result = {
@@ -91,52 +83,58 @@ def t_error(t):
         'line': t.lexer.lineno,
         'position': t.lexpos
     }
+
     if not hasattr(t.lexer, 'errors'):
         t.lexer.errors = []
+
     t.lexer.errors.append(result)
     t.lexer.skip(1)
 
-<<<<<<< HEAD
-# Build the lexer
-=======
->>>>>>> ca88b4ada4f05acc2afdfa7b85b5625aff502895
+# Build lexer
 lexer = lex.lex()
 
 def tokenize(input_string):
     """
-    Tokenizes the input string and returns a list of dictionaries 
-    representing the tokens.
+    Tokenizes the input string and returns token information.
     """
+
     lexer.errors = []
     lexer.lineno = 1
     lexer.input(input_string)
-    
+
     tokens_list = []
-    
+
     while True:
         tok = lexer.token()
+
         if not tok:
             break
-        
+
         tokens_list.append({
             'lexeme': str(tok.value),
             'token': tok.type,
             'line': tok.lineno,
             'position': tok.lexpos
         })
-        
+
     tokens_list.extend(lexer.errors)
     tokens_list.sort(key=lambda x: x['position'])
+
     return tokens_list
 
+
 if __name__ == '__main__':
+
     data = '''
     int x = 10;
     float y = 20.5;
+
     if (x < y) {
         return x + y;
     }
     '''
-    tokens = tokenize(data)
-    for t in tokens:
+
+    result = tokenize(data)
+
+    for t in result:
         print(f"{t['lexeme']:<15} | {t['token']}")

@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => //only after html is loaded:
         btnParse.disabled = true;
 
         try {//api calling
-            const response = await fetch('/api/parse', {
+            const response = await fetch('http://127.0.0.1:5000/api/parse', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

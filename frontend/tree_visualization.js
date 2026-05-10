@@ -2,7 +2,7 @@ window.renderD3Tree = function(treeData, containerSelector) {
     const container = d3.select(containerSelector);
     container.selectAll("*").remove(); // Clear previous tree
 
-    if (!treeData || !treeData.name) //validation:no trees{
+    if (!treeData || !treeData.name) {//validation:no trees
         container.html('<div class="empty-state">No tree data to display.</div>');
         return;
     }
