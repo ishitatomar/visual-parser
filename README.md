@@ -1,4 +1,4 @@
-# 🧠 Visual Syntax Analyzer
+# 🧠 ParseVisualizer
 
 A Visual Syntax Analyzer that demonstrates how compilers process input expressions through lexical analysis, syntax validation, and parse tree generation.
 
