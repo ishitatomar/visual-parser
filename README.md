@@ -29,9 +29,10 @@ This project helps in understanding compiler design concepts by providing a visu
 ## 🛠️ Tech Stack
 
 - Python  
-- PLY (Python Lex-Yacc)  
-- Tkinter (GUI)  
-- Graphviz  
+- Flask
+- JavaScript
+- HTML/CSS
+- D3.js
 
 ---
 
